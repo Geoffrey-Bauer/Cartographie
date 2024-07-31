@@ -16,7 +16,8 @@ import 'mapbox-gl/dist/mapbox-gl.css'
 
 // Import notre style
 import '../assets/style.css'
-import Markers from "./Markers.js";
+import Markers from "./Markers.js"
+import Notifications from "./Notifications.js"
 
 // Création de la Classe App
 class App {
@@ -24,6 +25,7 @@ class App {
     elDivMap
     map
     markers
+    notifications
     currentLngLat = null
 
     // Création de la fonction start
@@ -31,11 +33,17 @@ class App {
         this.loadDom()
         this.initMap()
         this.markers = new Markers(this)
+        this.notifications = new Notifications(this)
         this.loadFromLocalStorage()
         this.initEventForm()
 
         // Rendre les méthodes accessibles globalement
         window.app = this
+
+        // Actualiser la page toutes les 30 secondes
+        setInterval(() => {
+            this.loadFromLocalStorage()
+        }, 30000)
     }
 
     // Création de la fonction loadDom (Chargement du DOM)
@@ -91,6 +99,45 @@ class App {
             </form>
         `
         app.appendChild(sidebar)
+
+        // Ajout de l'icône de notification
+        const notificationIcon = document.createElement('div')
+        notificationIcon.id = 'notification-icon'
+        notificationIcon.innerHTML = '<i class="bi bi-bell"></i>'
+        app.appendChild(notificationIcon)
+
+        // Ajout du panneau de notifications
+        const notificationPanel = document.createElement('div')
+        notificationPanel.id = 'notification-panel'
+        notificationPanel.innerHTML = `
+            <h4>Notifications</h4>
+            <ul id="notifications-list"></ul>
+        `
+        app.appendChild(notificationPanel)
+
+        // Ajout de la badge de notification
+        const notificationBadge = document.createElement('div')
+        notificationBadge.id = 'notification-badge'
+        notificationBadge.className = 'notification-badge'
+        notificationIcon.appendChild(notificationBadge)
+
+        // Ajout de l'icône pour effacer le localStorage
+        const clearStorageIcon = document.createElement('div')
+        clearStorageIcon.id = 'clear-storage-icon'
+        clearStorageIcon.innerHTML = '<i class="bi bi-trash"></i>'
+        clearStorageIcon.title = 'Effacer tous les événements'
+        app.appendChild(clearStorageIcon)
+
+        // Ajout de l'écouteur de clic pour afficher/masquer le panneau de notifications
+        notificationIcon.addEventListener('click', () => {
+            notificationPanel.style.display = notificationPanel.style.display === 'none' ? 'block' : 'none'
+            if (notificationPanel.style.display === 'block') {
+                this.notifications.markEventsAsSeen()
+            }
+        })
+
+        // Ajout de l'écouteur de clic pour effacer le localStorage
+        clearStorageIcon.addEventListener('click', this.clearLocalStorage.bind(this))
     }
 
     // Création de la fonction initMap (Initialisation de la Map)
@@ -139,6 +186,14 @@ class App {
         }
 
         const formData = new FormData(event.target)
+        const startDate = new Date(formData.get('start'))
+        const endDate = new Date(formData.get('end'))
+
+        if (endDate <= startDate) {
+            alert("La date de fin doit être après la date de début.")
+            return
+        }
+
         const eventData = {
             id: formData.get('id') || Date.now().toString(),
             title: formData.get('title'),
@@ -157,8 +212,12 @@ class App {
         const marker = this.markers.addMarker(this.currentLngLat, eventData)
         marker.addTo(this.map)
         this.saveToLocalStorage()
+        this.notifications.updateNotifications()
         event.target.reset()
         this.currentLngLat = null
+
+        // Réinitialiser l'ID caché après la soumission
+        document.getElementById('id').value = ''
     }
 
     // Enregistrement des événements dans le localStorage
@@ -169,11 +228,26 @@ class App {
 
     // Chargement des événements depuis le localStorage
     loadFromLocalStorage() {
+        this.markers.clearMarkers() // Ajoutez cette méthode à la classe Markers pour supprimer tous les marqueurs existants
+        this.notifications.clearNotifications() // Réinitialise les notifications
+
         const events = JSON.parse(localStorage.getItem('mapEvents')) || []
         events.forEach(eventData => {
             const marker = this.markers.addMarker([eventData.lng, eventData.lat], eventData)
             marker.addTo(this.map)
         })
+        this.notifications.updateNotifications()
+    }
+
+    // Nouvelle méthode pour effacer le localStorage et les marqueurs
+    clearLocalStorage() {
+        if (confirm('Êtes-vous sûr de vouloir supprimer tous les événements ? Cette action est irréversible.')) {
+            localStorage.removeItem('mapEvents')
+            this.markers.clearMarkers()
+            this.notifications.clearNotifications()
+            this.notifications.hideNotificationBadge()
+            console.log('LocalStorage et marqueurs effacés')
+        }
     }
 
     // Remplissage du formulaire avec les données de l'événement
@@ -201,6 +275,7 @@ class App {
     deleteEvent(eventId) {
         this.markers.removeMarker(eventId)
         this.saveToLocalStorage()
+        this.notifications.updateNotifications()
     }
 }
 

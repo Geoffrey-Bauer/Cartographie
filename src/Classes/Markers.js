@@ -11,11 +11,12 @@ class Markers {
         const marker = new mapboxgl.Marker({ color })
             .setLngLat(lngLat)
             .setPopup(new mapboxgl.Popup().setHTML(this.createPopupContent(eventData)))
-            .addTo(this.app.map) // Assurez-vous que `this.app.map` est votre instance de carte Mapbox
+            .addTo(this.app.map)
 
         this.markers.push({ marker, eventData })
         return marker
     }
+
 
     removeMarker(eventId) {
         const index = this.markers.findIndex(m => m.eventData.id === eventId)
@@ -23,6 +24,11 @@ class Markers {
             this.markers[index].marker.remove() // Supprime le marqueur de la carte
             this.markers.splice(index, 1) // Supprime le marqueur de la liste
         }
+    }
+
+    clearMarkers() {
+        this.markers.forEach(m => m.marker.remove())
+        this.markers = []
     }
 
     getMarkers() {
@@ -65,7 +71,6 @@ class Markers {
 
         return `
             <div class="popup-content">
-                <button type="button" class="mapboxgl-popup-close-button" aria-label="Close">&times;</button>
                 <h3>${eventData.title}</h3>
                 <div class="description">${eventData.description}</div>
                 <p><strong>Type:</strong> <span class="badge badge-info">${eventData.type}</span></p>

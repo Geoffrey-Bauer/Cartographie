@@ -74,6 +74,7 @@
     background-color: #0056b3;
 }
 
+/*------------- MARKER WINDOW ----------*/
 .mapboxgl-popup {
     max-width: none;
     font: 14px/1.5 'Helvetica Neue', Arial, Helvetica, sans-serif;
@@ -191,4 +192,77 @@
 
 .mapboxgl-popup-close-button:focus {
     outline: none;
+}
+
+/*------------ NOTIFICATION --------------*/
+#notification-icon {
+    position: relative;
+    top: 20px;
+    left: 50px; /* Déplacement à gauche avec une marge de 50px */
+    cursor: pointer;
+    font-size: 24px;
+    color: #007bff;
+}
+
+.notification-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    width: 10px;
+    height: 10px;
+    background-color: red;
+    border-radius: 50%;
+    display: none;
+}
+
+#notification-panel {
+    display: none;
+    position: absolute;
+    top: 60px;
+    left: 50px; /* Aligner le panneau de notifications avec l'icône */
+    width: 300px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    z-index: 1000;
+}
+
+#notification-panel h4 {
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px;
+    margin: 0;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
+
+#notification-panel ul {
+    list-style: none;
+    padding: 10px;
+    margin: 0;
+}
+
+#notification-panel ul li {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+#notification-panel ul li:last-child {
+    border-bottom: none;
+}
+
+#notification-panel ul li span {
+    display: block;
+    color: #666;
+}
+
+/*------------ CLEAR ICON ---------*/
+#clear-storage-icon {
+    position: absolute;
+    top: 60px; /* Positionnez-le en dessous de l'icône de notification */
+    left: 50px;
+    cursor: pointer;
+    font-size: 24px;
+    color: #dc3545; /* Couleur rouge pour indiquer une action de suppression */
 }
