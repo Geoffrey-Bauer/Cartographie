@@ -1,0 +1,194 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    box-sizing: border-box;
+}
+
+#map {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: calc(100% - 320px); /* Ajustement pour laisser de la place au sidebar */
+    right: 320px; /* Ajustement pour laisser de la place au sidebar */
+    height: 100vh;
+}
+
+#sidebar {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 320px;
+    height: 100vh;
+    background-color: #ffffff;
+    padding: 20px;
+    box-shadow: -2px 0 5px rgba(0,0,0,0.1);
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#sidebar h2 {
+    margin-bottom: 20px;
+    color: #343a40;
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+}
+
+#sidebar form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+#sidebar form input,
+#sidebar form textarea,
+#sidebar form select,
+#sidebar form button {
+    margin-bottom: 15px;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+}
+
+#sidebar form input:focus,
+#sidebar form textarea:focus,
+#sidebar form select:focus {
+    border-color: #80bdff;
+    outline: none;
+    box-shadow: 0 0 5px rgba(0,123,255,0.25);
+}
+
+#sidebar form button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#sidebar form button:hover {
+    background-color: #0056b3;
+}
+
+.mapboxgl-popup {
+    max-width: none;
+    font: 14px/1.5 'Helvetica Neue', Arial, Helvetica, sans-serif;
+}
+
+.mapboxgl-popup-content {
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    width: auto;
+    max-width: 300px;
+    position: relative;
+}
+
+.mapboxgl-popup-content h3 {
+    margin: 0 0 10px 0;
+    font-size: 20px;
+    font-weight: bold;
+    color: #007bff;
+    word-wrap: break-word;
+}
+
+.mapboxgl-popup-content p {
+    margin: 5px 0;
+    color: #666;
+    word-wrap: break-word;
+}
+
+.mapboxgl-popup-content .description {
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    margin-bottom: 10px;
+}
+
+.mapboxgl-popup-content .badge {
+    font-size: 14px;
+    padding: 5px 10px;
+    border-radius: 4px;
+}
+
+.mapboxgl-popup-content .badge-info {
+    background-color: #17a2b8;
+    color: #fff;
+}
+
+.mapboxgl-popup-content .date-time {
+    margin-bottom: 10px;
+}
+
+.mapboxgl-popup-content .date-time p {
+    margin: 0;
+    font-weight: bold;
+}
+
+.mapboxgl-popup-content .alert {
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 4px;
+}
+
+.mapboxgl-popup-content .alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.mapboxgl-popup-content .alert-warning {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+.mapboxgl-popup-content .btn {
+    margin-top: 10px;
+    margin-right: 5px;
+    padding: 5px 10px;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.mapboxgl-popup-content .btn-edit {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+}
+
+.mapboxgl-popup-content .btn-edit:hover {
+    background-color: #0056b3;
+}
+
+.mapboxgl-popup-content .btn-delete {
+    background-color: #dc3545;
+    color: #fff;
+    border: none;
+}
+
+.mapboxgl-popup-content .btn-delete:hover {
+    background-color: #c82333;
+}
+
+.mapboxgl-popup-close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: #333;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.mapboxgl-popup-close-button:hover {
+    color: #007bff;
+}
+
+.mapboxgl-popup-close-button:focus {
+    outline: none;
+}
